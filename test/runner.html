@@ -1,0 +1,59 @@
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>Mocha Tests</title>
+	<link rel="stylesheet" href="../node_modules/mocha/mocha.css" />
+</head>
+<body>
+	<div id="mocha"></div>
+	<!--
+	This section is used to load scripts required for your script to run in the
+	browser.
+
+	You might, for example, want to add jQuery and/or abc.news.js here if that
+	functionality is required for your module.
+	-->
+
+	<!--
+	<script src="http://www.abc.net.au/res/libraries/jquery/jquery-1.8.2.min.js"></script>
+	<script src="http://www.abc.net.au/res/libraries/jquery/plugins/jquery.ba-hashchange.min.js"></script>
+	<script src="http://www.abc.net.au/res/libraries/jquery/plugins/jquery.viewport.mini.js"></script>
+	<script src="http://www.abc.net.au/res/bundles/platforms/abc.bundle.platforms-1.0.min.js"></script>
+	<script src="http://www.abc.net.au/res/libraries/swfobject/swfobject-2.2.js"></script>
+	<script src="http://www.abc.net.au/res/libraries/cinerama2/scripts/cinerama2.js"></script>
+	<script src="http://www.abc.net.au/res/libraries/location/abc.location-1.0.0.min.js"></script>
+	<script src="http://www.abc.net.au/res/sites/news/scripts/min/abc.news.js"></script>
+	-->
+
+	<!--
+	Load in Mocha
+	-->
+	<script src="../node_modules/expect.js/index.js"></script>
+	<script src="../node_modules/mocha/mocha.js"></script>
+	<script>
+		mocha.setup('bdd')
+	</script>
+
+	<!--
+	Here is the script we're testing
+	-->
+	<script src="../build/scripts/index.js"></script>
+
+	<!--
+	And here are the specs we're testing against
+	-->
+	<script src="example.js"></script>
+
+	<!--
+	Run
+	-->
+	<script>
+		if(window.mochaPhantomJS) {
+			mochaPhantomJS.run();
+		} else {
+			mocha.run()
+		}
+	</script>
+
+</body>
+</html>

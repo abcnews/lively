@@ -1,0 +1,152 @@
+$lively-progress-bar: rgba(0,0,0,0.1);
+$lively-progress-value: rgba(0,0,0,0.5);
+
+// Scrollbars!
+body {
+	overflow-x: hidden;
+}
+
+.Lively {
+	position: relative;
+	width: 100%;
+
+	&.fullscreen {
+		width: 100vw;
+		height: 100vh;
+		margin-left: calc(50% - 50vw);
+		overflow: hidden;
+
+		video {
+			height: 100%;
+			object-fit: cover;
+
+			@media (min-aspect-ratio: 16/9) {
+				object-fit: contain;
+			}
+		}
+
+		video.IIV::-webkit-media-controls-play-button,
+		video[autoplay]::-webkit-media-controls-start-playback-button {
+			opacity: 0;
+			pointer-events: none;
+			width: 5px;
+		}
+
+		// "Polyfill" - works for 16:9 video only.
+		video[data-object-fit="cover"] {
+			position: absolute;
+			top: 0;
+			left: 50%;
+			width: auto;
+			transform: translate(-50%, 0);
+		}
+
+		.Lively-controls {
+			@media (min-aspect-ratio: 16/9) {
+				width: calc(100vh*16/9);
+				left: 50%;
+				transform: translate(-50%, 0);
+			}
+		}
+
+	}
+
+	video {
+		width: 100%;
+	}
+
+}
+
+.Lively-controls {
+	position: absolute;
+	bottom: 0;
+	width: 100%;
+	height: 36px;
+
+	progress {
+		-webkit-appearance: none;
+		-moz-appearance: none;
+		appearance: none;
+
+		width: 100%;
+		height: 100%;
+		position: absolute;
+		left: 0;
+		top: 0;
+		z-index: 1;
+		background: $lively-progress-bar;
+		border: none;
+	}
+
+	progress::-ms-fill {
+		border: none;
+		background: $lively-progress-bar;
+	}
+
+	progress::-webkit-progress-bar {
+		background: $lively-progress-bar;
+	}
+
+	progress::-moz-progress-bar {
+		background: $lively-progress-bar;
+	}
+
+	progress::-webkit-progress-value {
+		background: $lively-progress-value;
+	}
+
+	progress::-moz-progress-value {
+		background: $lively-progress-value;
+	}
+
+	div  {
+		width: 100%;
+		height: 100%;
+		z-index: 2;
+		position: relative;
+
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+
+		> button {
+			z-index: 2;
+			background: transparent;
+			border: none;
+			width: 36px;
+			margin: 0 100px;
+		}
+
+		@media screen and (max-width: 495px) {
+			justify-content: space-between;
+			>button {
+				margin: 0;
+			}
+		}
+
+		.Lively-play {
+			svg:first-child {display: inline;}
+			svg:nth-child(2) {display: none;}
+
+			&.playing {
+				svg:first-child {display: none;}
+				svg:nth-child(2) {display: inline;}
+			}
+		}
+
+		.Lively-mute {
+			svg:first-child {display: inline;}
+			svg:nth-child(2) {display: none;}
+
+			&.muted {
+				svg:first-child {display: none;}
+				svg:nth-child(2) {display: inline;}
+			}
+		}
+
+
+
+	}
+
+
+}
