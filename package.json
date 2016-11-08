@@ -57,5 +57,6 @@
   },
   "dependencies": {
     "iphone-inline-video": "^1.9.4"
-  }
+  },
+  "main": "src/scripts"
 }
