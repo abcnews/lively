@@ -4,6 +4,7 @@
   "description": "An auto-play html5 video player for ABC News",
   "private": true,
   "repository": "ssh://git@stash.abc-dev.net.au:7999/news/lively.git",
+  "main": "src/scripts/index.js",
   "contributors": [
     {
       "name": "Simon Elvery",
