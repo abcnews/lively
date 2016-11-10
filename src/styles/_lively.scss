@@ -1,5 +1,5 @@
-$lively-progress-bar: rgba(0,0,0,0.1);
-$lively-progress-value: rgba(0,0,0,0.5);
+$lively-progress-bar: rgba(0,0,0,0.1) !default;
+$lively-progress-value: rgba(0,0,0,0.5) !default;
 
 // Scrollbars!
 body {
@@ -13,8 +13,13 @@ body {
 	&.fullscreen {
 		width: 100vw;
 		height: 100vh;
-		margin-left: calc(50% - 50vw);
+		margin: 5em 0 5em calc(50% - 50vw);
 		overflow: hidden;
+
+		@media (max-width: 600px) {
+			margin-top: 2em;
+			margin-bottom: 2em;
+		}
 
 		video {
 			height: 100%;
@@ -117,6 +122,10 @@ body {
 			margin: 0 100px;
 		}
 
+		svg {
+			vertical-align: middle;
+		}
+
 		@media screen and (max-width: 495px) {
 			justify-content: space-between;
 			>button {
@@ -135,12 +144,12 @@ body {
 		}
 
 		.Lively-mute {
-			svg:first-child {display: inline;}
-			svg:nth-child(2) {display: none;}
+			svg:first-child {display: none;}
+			svg:nth-child(2) {display: inline;}
 
 			&.muted {
-				svg:first-child {display: none;}
-				svg:nth-child(2) {display: inline;}
+				svg:first-child {display: inline;}
+				svg:nth-child(2) {display: none;}
 			}
 		}
 

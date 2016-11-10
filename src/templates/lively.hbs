@@ -1,5 +1,5 @@
 <div class="Lively{{#if settings.fullscreen}} fullscreen{{/if}}">
-	<video poster="{{poster}}" webkit-playsinline playsinline
+	<video {{#if poster}}poster="{{poster}}"{{/if}} webkit-playsinline playsinline
 		{{#if settings.scrollplay}} scrollplay{{/if}}
 		{{#if settings.autoplay}} muted autoplay{{/if}}
 		{{#if settings.loop}} loop{{/if}}

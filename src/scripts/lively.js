@@ -11,6 +11,7 @@ const playInline = require('iphone-inline-video');
 const identifier = require('util-identifier')('Lively');
 const win = window;
 const template = require('../templates/lively.hbs');
+const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
 
 // Initialise the whole thing
 function lively($container) {
@@ -112,10 +113,22 @@ function Lively(node) {
 		autoplay: name.indexOf('autoplay') > -1,
 		loop: name.indexOf('loop') > -1,
 		fullscreen: name.indexOf('fullscreen') > -1,
-		muted: name.indexOf('muted') > -1
+		muted: name.indexOf('muted') > -1 || iOS
 	};
 
-	$.getJSON(`https://content-gateway.abc-prod.net.au/api/v1/content/id/${videoId}`).done(initVid);
+
+	// This is mostly for testing, but it can also be used to avoid some requests
+	// Add data to the window
+	// window.livelyMetadata = {
+	// 7662478: {
+	// 	relatedItems: [{id: 7662482, docType: "Image", shortTeaserTitle: "Four Corners: Royal commission announced"}],
+	// 	renditions: [{"url" : "http://mpegmedia.abc.net.au/news/video/201607/CNb_NTRoyalCom_2607_256k.mp4", "contentType" : "video/mp4", "bitrate" : 170, "fileSize" : 2250877}]
+	// }
+	if (window.livelyMetadata[videoId]) {
+		initVid(window.livelyMetadata[videoId]);
+	} else {
+		$.getJSON(`https://content-gateway.abc-prod.net.au/api/v1/content/id/${videoId}`).done(initVid);
+	}
 
 	function initVid(json) {
 
@@ -123,7 +136,7 @@ function Lively(node) {
 
 		$inst = $(template({
 			renditions: json.renditions,
-			poster: cmimg(json.relatedItems[0].id, '16x9', $video.width()),
+			poster: (json.relatedItems.length) ? cmimg(json.relatedItems[0].id, '16x9', $video.width()) : false,
 			settings: _this.settings
 		}));
 
@@ -142,6 +155,7 @@ function Lively(node) {
 			_this.top = $inst.offset().top;
 			_this.bottom = _this.top + $inst.height();
 
+			// TODO: sort out sound on old iOS
 			playInline(_this.video, false); // iOS8-9
 
 			if ('objectFit' in document.documentElement.style === false && _this.settings.fullscreen) {
@@ -153,7 +167,7 @@ function Lively(node) {
 			}
 
 			if ($(_this.video).prop('muted')) {
-				$(_this.playButton).addClass('muted');
+				$(_this.muteButton).addClass('muted');
 			}
 
 			_this.playButton.addEventListener('click', function() {
@@ -174,13 +188,20 @@ function Lively(node) {
 			});
 
 			_this.replayButton.addEventListener('click', function() {
-				_this.video.pause();
+				_this.pause();
 				_this.video.currentTime = 0;
-				_this.video.play();
+				_this.play();
 			});
 
 			_this.video.addEventListener('timeupdate', function() {
 				$(_this.progressBar).attr("value", this.currentTime / this.duration);
+			});
+
+			_this.video.addEventListener('ended', function() {
+				_this.pause();
+				// TODO: Could probably do something better with the poster here.
+				_this.video.currentTime = 0;
+				_this.finishedOnce = true;
 			});
 
 			// References for later
@@ -199,7 +220,7 @@ Lively.prototype.updatePosition = function() {
 	this.position.bottom = this.position.top + $(this.node).height();
 	this.visible = (this.position.top-(viewport.top-viewport.bottom)*this.settings.scrollplayPosition < viewport.bottom) && (this.position.bottom+(viewport.top-viewport.bottom)*this.settings.scrollplayPosition > viewport.top);
 
-	if (this.settings.scrollplay && !this.goneManual) {
+	if (this.settings.scrollplay && !this.goneManual && !this.finishedOnce) {
 		if (this.visible) {
 			this.play();
 		} else {
@@ -227,4 +248,3 @@ Lively.prototype.unmute = function() {
 	$(this.video).prop('muted', false);
 	$(this.muteButton).removeClass('muted');
 };
-
