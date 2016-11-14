@@ -11,7 +11,8 @@ const playInline = require('iphone-inline-video');
 const identifier = require('util-identifier')('Lively');
 const win = window;
 const template = require('../templates/lively.hbs');
-const iOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+const iOS = /iPad|iPhone|iPod/i.test(navigator.userAgent) && !window.MSStream;
+const isWhitelisted = /iPhone|iPod|iPad/i.test(navigator.userAgent) && !matchMedia('(-webkit-video-playable-inline)').matches;
 
 // Initialise the whole thing
 function lively($container) {
@@ -124,7 +125,7 @@ function Lively(node) {
 	// 	relatedItems: [{id: 7662482, docType: "Image", shortTeaserTitle: "Four Corners: Royal commission announced"}],
 	// 	renditions: [{"url" : "http://mpegmedia.abc.net.au/news/video/201607/CNb_NTRoyalCom_2607_256k.mp4", "contentType" : "video/mp4", "bitrate" : 170, "fileSize" : 2250877}]
 	// }
-	if (window.livelyMetadata[videoId]) {
+	if (win.livelyMetadata && win.livelyMetadata[videoId]) {
 		initVid(window.livelyMetadata[videoId]);
 	} else {
 		$.getJSON(`https://content-gateway.abc-prod.net.au/api/v1/content/id/${videoId}`).done(initVid);
@@ -136,8 +137,9 @@ function Lively(node) {
 
 		$inst = $(template({
 			renditions: json.renditions,
-			poster: (json.relatedItems.length) ? cmimg(json.relatedItems[0].id, '16x9', $video.width()) : false,
-			settings: _this.settings
+			poster: (json.relatedItems.length) ? cmimg(json.relatedItems[0].id, '16x9', $video.width() * win.devicePixelRatio) : false,
+			settings: _this.settings,
+			showMute: !isWhitelisted
 		}));
 
 		$video.replaceWith($inst);
@@ -156,7 +158,7 @@ function Lively(node) {
 			_this.bottom = _this.top + $inst.height();
 
 			// TODO: sort out sound on old iOS
-			playInline(_this.video, false); // iOS8-9
+			playInline(_this.video, false, !isWhitelisted); // iOS8-9
 
 			if ('objectFit' in document.documentElement.style === false && _this.settings.fullscreen) {
 				$(_this.video).attr('data-object-fit', 'cover'); // IE9+/Edge. See _section--cover.scss
@@ -179,13 +181,15 @@ function Lively(node) {
 				}
 			});
 
-			_this.muteButton.addEventListener('click', function() {
-				if (_this.video.muted) {
-					_this.unmute();
-				} else {
-					_this.mute();
-				}
-			});
+			if (_this.muteButton) {
+				_this.muteButton.addEventListener('click', function() {
+					if (_this.video.muted) {
+						_this.unmute();
+					} else {
+						_this.mute();
+					}
+				});
+			}
 
 			_this.replayButton.addEventListener('click', function() {
 				_this.pause();
