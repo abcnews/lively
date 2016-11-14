@@ -1,6 +1,6 @@
 {
   "name": "lively",
-  "version": "0.0.0",
+  "version": "1.0.0",
   "description": "An auto-play html5 video player for ABC News",
   "private": true,
   "repository": "ssh://git@stash.abc-dev.net.au:7999/news/lively.git",
@@ -54,7 +54,7 @@
   "dependencies": {
     "iphone-inline-video": "^1.9.4",
     "util-cmimg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-cmimg.git#1.1.0",
-    "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.5.0",
+    "util-dewysiwyg": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-dewysiwyg.git#3.6.0",
     "util-identifier": "^1.0.0",
     "util-news-selectors": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-news-selectors.git#2.2.0",
     "util-url2cmid": "git+ssh://git@stash.abc-dev.net.au:7999/news/util-url2cmid.git#1.0.1"
