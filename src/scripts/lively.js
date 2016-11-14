@@ -230,13 +230,22 @@ Lively.prototype.updatePosition = function() {
 };
 
 Lively.prototype.play = function() {
-	this.video.play();
-	$(this.playButton).addClass('playing');
+	var promise = this.video.play();
+	if (promise) {
+		promise.then($(this.playButton).addClass('playing'));
+	} else {
+		$(this.playButton).addClass('playing');
+	}
+
 };
 
 Lively.prototype.pause = function() {
-	this.video.pause();
-	$(this.playButton).removeClass('playing');
+	var promise = this.video.pause();
+	if (promise) {
+		promise.then($(this.playButton).removeClass('playing'));
+	} else {
+		$(this.playButton).removeClass('playing');
+	}
 };
 
 Lively.prototype.mute = function() {
