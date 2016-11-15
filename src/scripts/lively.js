@@ -138,8 +138,7 @@ function Lively(node) {
 		$inst = $(template({
 			renditions: json.renditions,
 			poster: (json.relatedItems.length) ? cmimg(json.relatedItems[0].id, '16x9', $video.width() * win.devicePixelRatio) : false,
-			settings: _this.settings,
-			showMute: !isWhitelisted
+			settings: _this.settings
 		}));
 
 		$video.replaceWith($inst);
@@ -181,15 +180,17 @@ function Lively(node) {
 				}
 			});
 
-			if (_this.muteButton) {
-				_this.muteButton.addEventListener('click', function() {
-					if (_this.video.muted) {
-						_this.unmute();
-					} else {
-						_this.mute();
-					}
-				});
-			}
+			_this.muteButton.addEventListener('click', function() {
+
+				if (isWhitelisted) {
+					_this.video.webkitEnterFullScreen();
+					_this.video.play();
+				} else if (_this.video.muted) {
+					_this.unmute();
+				} else {
+					_this.mute();
+				}
+			});
 
 			_this.replayButton.addEventListener('click', function() {
 				_this.pause();
