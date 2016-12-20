@@ -114,9 +114,9 @@ function Lively(node) {
 		autoplay: name.indexOf('autoplay') > -1,
 		loop: name.indexOf('loop') > -1,
 		fullscreen: name.indexOf('fullscreen') > -1,
-		muted: name.indexOf('muted') > -1 || iOS
+		muted: name.indexOf('muted') > -1 || iOS,
+		controls: name.indexOf('nocontrols') < 0
 	};
-
 
 	// This is mostly for testing, but it can also be used to avoid some requests
 	// Add data to the window
@@ -136,7 +136,7 @@ function Lively(node) {
 		var $inst;
 
 		$inst = $(template({
-			renditions: json.renditions,
+			renditions: json.renditions.sort((a,b) => a.bitrate > b.bitrate ? -1 : a.bitrate < b.bitrate ? 1 : 0),
 			poster: (json.relatedItems.length) ? cmimg(json.relatedItems[0].id, '16x9', $video.width() * win.devicePixelRatio) : false,
 			settings: _this.settings
 		}));
@@ -240,7 +240,7 @@ Lively.prototype.play = function() {
 		promise
 			.then(() => $(this.playButton).addClass('playing'))
 			.catch(() => {
-				this .mute();
+				this.mute();
 				return this.video.play();
 			})
 			.then(() => $(this.playButton).addClass('playing'));
