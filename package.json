@@ -1,6 +1,6 @@
 {
   "name": "lively",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "An auto-play html5 video player for ABC News",
   "private": true,
   "repository": "ssh://git@stash.abc-dev.net.au:7999/news/lively.git",
